@@ -1,3 +1,4 @@
+
 import pyocr
 import importlib
 import sys
@@ -6,14 +7,18 @@ import codecs
 
 importlib.reload(sys)
 time1 = time.time()
- 
+
 import os.path
 from pdfminer.pdfparser import  PDFParser,PDFDocument
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.layout import LTTextBoxHorizontal,LAParams
 from pdfminer.pdfinterp import PDFTextExtractionNotAllowed
- 
+
+import shutil
+import os
+
+
 def pdf_txt():
     try:
         '''解析PDF文本，并保存到TXT文件中'''
@@ -40,14 +45,15 @@ def pdf_txt():
             device = PDFPageAggregator(rsrcmgr,laparams=laparams)
             #创建一个PDF解释其对象
             interpreter = PDFPageInterpreter(rsrcmgr,device)
-     
             #循环遍历列表，每次处理一个page内容
+            # doc.get_pages() 获取page列表
+            #f = codecs.open(write_path,'w','utf-8')
 
             x_str = ''
-            # 一篇文献合成一个字符串
             for page in doc.get_pages():
                 interpreter.process_page(page)
                 #接受该页面的LTPage对象
+                
                 layout = device.get_result()
                 # 这里layout是一个LTPage对象 里面存放着 这个page解析出的各种对象
                 # 一般包括LTTextBox, LTFigure, LTImage, LTTextBoxHorizontal 等等
@@ -57,6 +63,7 @@ def pdf_txt():
                     if(isinstance(x,LTTextBoxHorizontal)):
                         results = x.get_text()
                         x_str += results
+
 
             refe = 0
             refe = x_str.find("References")
@@ -79,12 +86,10 @@ def pdf_txt():
             if field == -1:
                 field = x_str.find(field_name_lower0)
 
-
             print('field: ', field)
             print('refe: ', refe)
             
             if (int(field) > int(refe)) and (int(field) != -1) and (int(refe) != -1):
-            #比较油田名称的位置和参考文献的位置
                 print(text_path)
                 false_pdf_name.write(text_path + '\n')
 
@@ -94,8 +99,7 @@ def pdf_txt():
 
     except Exception as e:
         pass
-     
-     
+
 def move_file():
     with open(r'C:\Users\jzzh\Desktop\false_pdf_name_0.txt','r',encoding='gb18030', errors = "ignore") as f:
         data = f.readlines()
@@ -107,14 +111,10 @@ def move_file():
             except Exception as e:
                 pass
 
-             
+
 if __name__ == '__main__':
     FileRoot = r'D:\pdf_txt\test1'
-    # 初始文件夹路径（改这里）
-   
     false_pdf_name = codecs.open(r'C:\Users\jzzh\Desktop\false_pdf_name_0.txt','w','utf-8')
-    # 返回值的txt文档路径（改这里）
-    
     for parent, dirnames, filenames in os.walk(FileRoot):
         for filename in filenames:
             field_name = str(parent.split("test1\\")[1].split("-")[0])
@@ -124,11 +124,11 @@ if __name__ == '__main__':
             field_name_lower = field_name.lower()
             print("field_name: ", field_name)
             text_path = os.path.join(parent, filename)
-
             pdf_txt()
-            move_file()
             
+    move_file()        
+                    
     time2 = time.time()
     print("总共消耗时间为:",time2-time1)
-    
-    
+
+
