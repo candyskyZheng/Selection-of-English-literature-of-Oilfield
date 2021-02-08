@@ -6,7 +6,6 @@ import codecs
 
 importlib.reload(sys)
 time1 = time.time()
-# print("初始时间为：",time1)
  
 import os.path
 from pdfminer.pdfparser import  PDFParser,PDFDocument
@@ -15,15 +14,8 @@ from pdfminer.converter import PDFPageAggregator
 from pdfminer.layout import LTTextBoxHorizontal,LAParams
 from pdfminer.pdfinterp import PDFTextExtractionNotAllowed
  
-
-#def shibie(results, field_name):
-    
-
 def pdf_txt():
     try:
-        #text_path = r'D:\pdf_txt\test1\Marlim Sul-Brazil\da, C., et al., 2014, Insights from the Evaluation of Sand Control Performance in Offshore Brazilian Southeast, SPE168177.pdf'
-        #field_name = 'Marlim Sul'
-        
         '''解析PDF文本，并保存到TXT文件中'''
         fp = open(text_path,'rb')
         #用文件对象创建一个PDF文档分析器
@@ -50,10 +42,9 @@ def pdf_txt():
             interpreter = PDFPageInterpreter(rsrcmgr,device)
      
             #循环遍历列表，每次处理一个page内容
-            # doc.get_pages() 获取page列表
-            #f = codecs.open(write_path,'w','utf-8')
 
             x_str = ''
+            # 一篇文献合成一个字符串
             for page in doc.get_pages():
                 interpreter.process_page(page)
                 #接受该页面的LTPage对象
@@ -64,13 +55,9 @@ def pdf_txt():
                 
                 for x in layout:
                     if(isinstance(x,LTTextBoxHorizontal)):
-                        #with open(r'2.txt','a') as f:
-                        #f.write(x.get_text())
                         results = x.get_text()
                         x_str += results
 
-                        #f.write(results + '\n')
-           
             refe = 0
             refe = x_str.find("References")
             if refe == -1:
@@ -102,6 +89,7 @@ def pdf_txt():
             print('refe: ', refe)
             
             if (int(field) > int(refe)) and (int(field) != -1) and (int(refe) != -1):
+            #比较油田名称的位置和参考文献的位置
                 print(text_path)
                 false_pdf_name.write(text_path + '\n')
 
@@ -115,7 +103,11 @@ def pdf_txt():
 
 if __name__ == '__main__':
     FileRoot = r'D:\pdf_txt\test1'
+    # 初始文件夹路径（改这里）
+   
     false_pdf_name = codecs.open(r'C:\Users\jzzh\Desktop\false_pdf_name_0.txt','w','utf-8')
+    # 返回值的txt文档路径（改这里）
+    
     for parent, dirnames, filenames in os.walk(FileRoot):
         for filename in filenames:
             field_name = str(parent.split("test1\\")[1].split("-")[0])
@@ -125,10 +117,8 @@ if __name__ == '__main__':
             field_name_lower = field_name.lower()
             print("field_name: ", field_name)
             text_path = os.path.join(parent, filename)
-            #write_path = text_path.replace(".pdf", ".txt").replace("test1", "test")
-            #print('write_path', write_path)
+
             pdf_txt()
-            #read_txt()
             
     time2 = time.time()
     print("总共消耗时间为:",time2-time1)
