@@ -62,10 +62,8 @@ def pdf_txt():
             refe = x_str.find("References")
             if refe == -1:
                 refe = x_str.find("Reference")
-
             if refe == -1:
                 refe = x_str.find("REFERENCE")
-
             if refe == -1:
                 refe = x_str.find("REFERENCES")
 
@@ -74,13 +72,10 @@ def pdf_txt():
             field = x_str.find(field_name)
             if field == -1:
                 field = x_str.find(field_name_upper)
-
             if field == -1:
                 field = x_str.find(field_name_lower)
-
             if field == -1:
                 field = x_str.find(field_name_upper0)
-
             if field == -1:
                 field = x_str.find(field_name_lower0)
 
@@ -99,8 +94,20 @@ def pdf_txt():
 
     except Exception as e:
         pass
+     
+     
+def move_file():
+    with open(r'C:\Users\jzzh\Desktop\false_pdf_name_0.txt','r',encoding='gb18030', errors = "ignore") as f:
+        data = f.readlines()
+        for line in data:
+            line = line.strip('\n')
+            print(line)
+            try:
+                shutil.move(line, r"D:\文件更新\Refer_Update0203\\1")
+            except Exception as e:
+                pass
 
-
+             
 if __name__ == '__main__':
     FileRoot = r'D:\pdf_txt\test1'
     # 初始文件夹路径（改这里）
@@ -119,6 +126,9 @@ if __name__ == '__main__':
             text_path = os.path.join(parent, filename)
 
             pdf_txt()
+            move_file()
             
     time2 = time.time()
     print("总共消耗时间为:",time2-time1)
+    
+    
