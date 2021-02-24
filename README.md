@@ -1,5 +1,5 @@
 #### Selection-of-English-literature-of-Oilfield
-#### 油田英文文献筛选， 返回一个txt文档  false_pdf_name_0. txt, 油田名称只出现在参考文献里的文件名称；
+
 #### 1.  遍历文件夹下的子文件夹；
 #### 2.  遍历子文件夹下的pdf文档(text_path), 获取油田名称（Field_name)；
 #### 3.  读取pdf文档，将整篇文章存成string；
